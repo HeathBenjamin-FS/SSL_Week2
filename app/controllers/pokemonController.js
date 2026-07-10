@@ -2,7 +2,7 @@ const Pokemon = require("../models/Pokemon");
 
 const getAllPokemon = async (req, res) => {
   try {
-    const pokemon = await Pokemon.find({});
+    const pokemon = await Pokemon.find({}).populate("trainer");
     res.status(200).json({
       success: true,
       data: pokemon,
@@ -21,9 +21,8 @@ const getAllPokemon = async (req, res) => {
 const createPokemon = async (req, res) => {
   try {
     console.log(req.body);
-    const pokemon = (await Pokemon.create(req.body)).populate("trainer");
+    const pokemon = await Pokemon.create(req.body);
     res.status(200).json({
-      id,
       data: pokemon,
       success: true,
       method: req.method,
@@ -41,7 +40,7 @@ const createPokemon = async (req, res) => {
 const getAllPokemonById = async (req, res) => {
   const { id } = req.params;
   try {
-    const pokemonID = await Pokemon.findById(id);
+    const pokemonID = await Pokemon.findById(id).populate("trainer");
     res.status(200).json({
       id,
       data: pokemonID,

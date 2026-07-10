@@ -2,7 +2,7 @@ const Trainer = require("../models/Trainer");
 
 const getAllTrainers = async (req, res) => {
   try {
-    const trainers = await Trainer.find({});
+    const trainers = await Trainer.find({}).populate("pokemon");
     res.status(200).json({
       success: true,
       data: trainers,
@@ -21,9 +21,8 @@ const getAllTrainers = async (req, res) => {
 const createTrainer = async (req, res) => {
   try {
     console.log(req.body);
-    const trainer = (await Trainer.create(req.body)).populate("pokemon");
+    const trainer = await Trainer.create(req.body);
     res.status(200).json({
-      id,
       data: trainer,
       success: true,
       method: req.method,
@@ -41,7 +40,7 @@ const createTrainer = async (req, res) => {
 const getAllTrainersById = async (req, res) => {
   const { id } = req.params;
   try {
-    const trainerID = await Trainer.findById(id);
+    const trainerID = await Trainer.findById(id).populate("pokemon");
     res.status(200).json({
       id,
       data: trainerID,
