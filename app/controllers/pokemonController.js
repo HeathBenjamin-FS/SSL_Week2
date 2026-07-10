@@ -11,20 +11,31 @@ const getAllPokemon = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Something failed, please try again.",
+    });
   }
 };
 
 const createPokemon = async (req, res) => {
-  const { id } = req.params;
-  console.log(req.body);
-  const pokemon = await Pokemon.create(req.body);
-  res.status(200).json({
-    id,
-    data: pokemon,
-    success: true,
-    method: req.method,
-    message: "Pokemon route POST request made and data pushed.",
-  });
+  try {
+    console.log(req.body);
+    const pokemon = (await Pokemon.create(req.body)).populate("trainer");
+    res.status(200).json({
+      id,
+      data: pokemon,
+      success: true,
+      method: req.method,
+      message: "Pokemon route POST request made and data pushed.",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Creation failed, please verify information and try again.",
+    });
+  }
 };
 
 const getAllPokemonById = async (req, res) => {
@@ -40,6 +51,11 @@ const getAllPokemonById = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Could not find this Pokemon's ID. Veryify information and try again.",
+      method: req.method,
+    });
   }
 };
 
@@ -57,6 +73,10 @@ const updatePokemon = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Could not update this Pokemon. Try again.",
+    });
   }
 };
 
@@ -73,6 +93,10 @@ const deletePokemon = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Could not delete the Pokemon. Please try again.",
+    });
   }
 };
 

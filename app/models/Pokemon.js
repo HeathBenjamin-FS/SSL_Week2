@@ -17,6 +17,7 @@ const pokemonSchema = new mongoose.Schema(
     type: {
       type: String,
       required: [true, "Every Pokemon has a typing!"],
+      trim: true,
     },
     level: {
       type: Number,

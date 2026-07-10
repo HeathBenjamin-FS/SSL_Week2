@@ -11,20 +11,31 @@ const getAllTrainers = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Something failed, please try again.",
+    });
   }
 };
 
 const createTrainer = async (req, res) => {
-  const { id } = req.params;
-  console.log(req.body);
-  const trainer = await Trainer.create(req.body);
-  res.status(200).json({
-    id,
-    data: trainer,
-    success: true,
-    method: req.method,
-    message: "Trainer route post request made and data pushed.",
-  });
+  try {
+    console.log(req.body);
+    const trainer = (await Trainer.create(req.body)).populate("pokemon");
+    res.status(200).json({
+      id,
+      data: trainer,
+      success: true,
+      method: req.method,
+      message: "Trainer route post request made and data pushed.",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Creation failed, please verify information and try again.",
+    });
+  }
 };
 
 const getAllTrainersById = async (req, res) => {
@@ -40,6 +51,11 @@ const getAllTrainersById = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Could not find this Trainer's ID. Veryify information and try again.",
+      method: req.method,
+    });
   }
 };
 
@@ -57,6 +73,10 @@ const updateTrainer = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Could not update this Trainer. Try again.",
+    });
   }
 };
 
@@ -73,6 +93,10 @@ const deleteTrainer = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(404).json({
+      success: false,
+      message: "Could not delete the Trainer. Please try again.",
+    });
   }
 };
 
