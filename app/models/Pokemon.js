@@ -4,7 +4,6 @@ const pokemonSchema = new mongoose.Schema(
   {
     nickName: {
       type: String,
-      unique: true,
       trim: true,
       maxLength: [50, "No Pokemon's nickname is over 50 characters"],
     },

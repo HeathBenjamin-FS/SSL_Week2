@@ -1,4 +1,5 @@
 const Pokemon = require("../models/Pokemon");
+const Trainer = require("../models/Trainer");
 
 const getAllPokemon = async (req, res) => {
   try {
@@ -22,6 +23,9 @@ const createPokemon = async (req, res) => {
   try {
     console.log(req.body);
     const pokemon = await Pokemon.create(req.body);
+
+    await Trainer.findByIdAndUpdate(req.body.trainer, { $push: { pokemon: pokemon._id } }, { new: true });
+
     res.status(200).json({
       data: pokemon,
       success: true,
