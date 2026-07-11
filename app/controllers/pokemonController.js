@@ -26,7 +26,7 @@ const createPokemon = async (req, res) => {
 
     await Trainer.findByIdAndUpdate(req.body.trainer, { $push: { pokemon: pokemon._id } }, { new: true });
 
-    res.status(200).json({
+    res.status(201).json({
       data: pokemon,
       success: true,
       method: req.method,
@@ -34,10 +34,21 @@ const createPokemon = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(404).json({
-      success: false,
-      message: "Creation failed, please verify information and try again.",
-    });
+
+    if (error === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: "Creation failed, please verify information and try again.",
+      });
+    }
+
+    res.status(
+      (500).json({
+        success: false,
+        message: "An internal error occured",
+        error: error,
+      }),
+    );
   }
 };
 
@@ -72,7 +83,7 @@ const updatePokemon = async (req, res) => {
       data: pokemonUpdate,
       success: true,
       method: req.method,
-      message: "Pokemon route put request made with ID.",
+      message: "Pokemon route put request made with ID. Pokemon updated",
     });
   } catch (error) {
     console.log(error);

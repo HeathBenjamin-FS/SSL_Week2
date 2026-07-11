@@ -22,7 +22,7 @@ const createTrainer = async (req, res) => {
   try {
     console.log(req.body);
     const trainer = await Trainer.create(req.body);
-    res.status(200).json({
+    res.status(201).json({
       data: trainer,
       success: true,
       method: req.method,
@@ -30,9 +30,16 @@ const createTrainer = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(404).json({
+    if (error === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: "Creation failed, please verify information and try again.",
+      });
+    }
+    res.status(500).json({
       success: false,
-      message: "Creation failed, please verify information and try again.",
+      message: "An internal error occured",
+      error: error,
     });
   }
 };
@@ -68,7 +75,7 @@ const updateTrainer = async (req, res) => {
       data: trainerUpdate,
       success: true,
       method: req.method,
-      message: "Trainer route put request made with ID.",
+      message: "Trainer route put request made with ID. Data updated!",
     });
   } catch (error) {
     console.log(error);
